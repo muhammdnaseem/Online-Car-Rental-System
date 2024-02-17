@@ -1,0 +1,68 @@
+<?php 
+require_once 'includes/database.php';
+require_once 'coAdminCode.php';
+require_once 'includes/head.php';
+
+$coAdmins = getCoAdmin($db);
+
+?>
+
+<?php if(isset($_SESSION['success'])): echo $_SESSION['success'];unset($_SESSION['success']); endif;?> 
+<?php if(isset($_SESSION['error'])): echo $_SESSION['error'];unset($_SESSION['error']); endif;?> 
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header text-danger h3 d-flex justify-content-between">
+                <span>Manage Co-Admin</span>
+                <span>
+                    <a href="viewBlockCoAdmins.php" class="btn btn-inverse-primary btn-sm">Blocked Users</a>
+                    <a href="addCoAdmin.php" class="btn btn-inverse-info btn-sm">Add Co-Admin</a>
+                </span>
+            </div>
+            <div class="card-body p-3">
+                <div class="table-responsive">
+                <table class="table table-hover" id="regUsersTable">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>User name</th>
+                            <th>Email</th>
+                            <th>Mobile</th>
+                            <th>Address</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php 
+                        if(!empty($coAdmins)):
+                            foreach($coAdmins as $coAdmin):
+                                if($coAdmin['status'] === 'unblock'):
+                        ?>
+                        <tr>
+                            <td><img src="../<?= $coAdmin['image']; ?>" alt="No-image" style="width:60px;height:60px;"></td>
+                            <td><?= $coAdmin['username']; ?></td>
+                            <td><?= $coAdmin['email']; ?></td>
+                            <td><?= $coAdmin['mobile']; ?></td>
+                            <td><?= $coAdmin['address']; ?></td>
+                            <td>
+                                <a href="coAdminCode.php?action=block&id=<?= $coAdmin['id']; ?>" class="btn btn-inverse-primary btn-sm">Block</a>
+                                <a href="coAdminCode.php?action=delete&id=<?= $coAdmin['id']; ?>" class="btn btn-inverse-danger btn-sm">Delete</a>
+                            </td>
+                            
+                        </tr>
+                        <?php endif; endforeach; else: ?>
+                            <tr>
+                            <td colspan="6" class="text-danger font-weight-bold text-center">USER NOT AVAILABLE</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php require_once 'includes/foot.php'; ?>
